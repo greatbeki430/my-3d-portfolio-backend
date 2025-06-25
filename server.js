@@ -23,6 +23,7 @@ app.use(
     origin: [
       "http://localhost:3000",
       "https://my-3d-portfolio-frontend.onrender.com",
+      "https://gportfolio-frontend.onrender.com", // <-- ADD your real frontend domain
     ],
     methods: ["GET", "POST"],
     credentials: true,
