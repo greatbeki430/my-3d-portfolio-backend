@@ -5,7 +5,7 @@ const { google } = require("googleapis");
 const { oauth2Client } = require("../utils/googleOAuth");
 
 // POST /api/contact
-router.post("/api/contact", async (req, res) => {
+router.post("/contact", async (req, res) => {
   console.log("📩 Received contact data:", req.body);
 
   try {
