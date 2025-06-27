@@ -1,25 +1,17 @@
-// backend/routes/chatbot.js
 const express = require("express");
 const router = express.Router();
 const sanitizeHtml = require("sanitize-html");
 
-// Translations for multi-language support
 const translations = {
   en: {
     default:
-      "Sorry, I don't understand that yet. Try asking about projects, skills, contact, CV, or more!",
+      "Sorry, I don't understand that yet. You can ask about projects, skills, background, CV, or more!",
     greeting:
-      "Hello! I'm Gezagn's assistant. Ask about my projects, skills, or how to connect!",
-    tips: "I can help with: Projects, Skills, Contact, CV, Certifications, Education, Blog, Testimonials, or more!",
-  },
-  am: {
-    default: "ይቅርታ፣ ያን ገና አልገባኝም። ስለ ፕሮጀክቶች፣ ችሎታዎች፣ እውቂያ፣ ሲቪ ወይም ሌላ ይጠይቁ!",
-    greeting: "ሰላም! የገዛኝ ረዳት ነኝ። ስለ ፕሮጀክቶቼ፣ ችሎታዎቼ ወይም እንዴት መገናኘት እንደምችል ይጠይቁ።",
-    tips: "እኔ መርዳት የምችለው፡ ፕሮጀክቶች፣ ችሎታዎች፣ እውቂያ፣ ሲቪ፣ ሰርተፊኬቶች፣ ትምህርት፣ ብሎግ፣ ምስክርነቶች ወይም ሌላ!",
+      "Hello! I'm Gezagn's assistant. Ask me about my projects, skills, experience, or how to contact me!",
+    tips: "I can help with: Projects, Skills, Contact, CV, Certifications, Education, Blog, Testimonials, Hobbies, and more!",
   },
 };
 
-// Context for follow-up questions
 let conversationContext = {};
 
 router.post("/chat", (req, res) => {
@@ -29,106 +21,251 @@ router.post("/chat", (req, res) => {
     allowedAttributes: {},
   });
   const lowerMsg = sanitizedMessage.toLowerCase();
-  let response = {
-    type: "text",
-    content: translations[lang].default,
-  };
 
-  // Initialize user context
+  let response = { type: "text", content: translations[lang].default };
+
   if (!conversationContext[userId]) {
     conversationContext[userId] = { lastTopic: null };
   }
 
-  // Greeting
-  if (lowerMsg.includes("hello") || lowerMsg.includes("hi")) {
-    response.content = translations[lang].greeting;
-    conversationContext[userId].lastTopic = "greeting";
-  }
-  // Experience
-  else if (lowerMsg.includes("experience")) {
-    response.content =
-      "I have hands-on experience building full-stack web apps, mobile apps, and contributing to projects like emergency booking systems and organizational websites.";
-    conversationContext[userId].lastTopic = "experience";
-  }
-  // About
-  else if (lowerMsg.includes("about you") || lowerMsg.includes("who are you")) {
-    response.content =
-      "I'm Gezagn Bekele, a passionate Software Engineer specializing in Web Development, AI, and modern tech stacks.";
-    conversationContext[userId].lastTopic = "about";
-  }
-  // Location
-  else if (lowerMsg.includes("location") || lowerMsg.includes("based")) {
-    response.content =
-      "I'm based in Ethiopia but open to remote opportunities globally.";
-    conversationContext[userId].lastTopic = "location";
-  }
-  // Languages
-  else if (lowerMsg.includes("language")) {
-    response.type = "list";
-    response.content = {
-      message: "I communicate in:",
-      items: ["English", "Amharic", "Afaan Oromo"],
-    };
-    conversationContext[userId].lastTopic = "languages";
-  }
-  // AI/ML
-  else if (lowerMsg.includes("ai") || lowerMsg.includes("machine learning")) {
-    response.content =
-      "I have foundational knowledge in AI and Machine Learning, with experience in AI-focused projects.";
-    conversationContext[userId].lastTopic = "ai";
-  }
-  // Networking/Cybersecurity
-  else if (
-    lowerMsg.includes("networking") ||
-    lowerMsg.includes("cybersecurity")
-  ) {
-    response.content =
-      "I'm expanding my expertise in Networking and Cybersecurity through practical and theoretical studies.";
-    conversationContext[userId].lastTopic = "networking";
-  }
-  // Hobbies
-  else if (lowerMsg.includes("hobbies") || lowerMsg.includes("interests")) {
-    response.content =
-      "In my free time, I enjoy exploring new tech, reading about AI advancements, and contributing to open-source projects.";
-    conversationContext[userId].lastTopic = "hobbies";
-  }
-  // Availability
-  else if (
-    lowerMsg.includes("available") ||
-    lowerMsg.includes("availability")
-  ) {
-    response.content =
-      "I'm currently available for freelance and remote full-time opportunities. Feel free to reach out!";
-    conversationContext[userId].lastTopic = "availability";
-  }
-  // Help/Suggestions
-  else if (lowerMsg.includes("what can you do") || lowerMsg.includes("help")) {
-    response.type = "list";
-    response.content = {
-      message: translations[lang].tips,
-      items: [
-        "View my projects",
-        "Learn about my skills",
-        "Download my CV",
-        "Contact me",
-        "See my certifications",
-        "Check my education",
-        "Read my blog",
-        "View testimonials",
+  const keywords = [
+    // Greeting
+    {
+      match: ["hello", "hi", "hey", "greetings"],
+      action: () => {
+        response.content = translations[lang].greeting;
+        conversationContext[userId].lastTopic = "greeting";
+      },
+    },
+    // About Me
+    {
+      match: [
+        "about you",
+        "who are you",
+        "yourself",
+        "tell me about you",
+        "who is gezagn",
       ],
-    };
-    conversationContext[userId].lastTopic = "help";
+      action: () => {
+        response.content =
+          "I'm Gezagn Bekele, a Software Engineer with expertise in Web Development, AI, and Cybersecurity.";
+        conversationContext[userId].lastTopic = "about";
+      },
+    },
+    // Experience
+    {
+      match: [
+        "experience",
+        "work history",
+        "what experience do you have",
+        "tell me your experience",
+      ],
+      action: () => {
+        response.content =
+          "I have hands-on experience building full-stack apps, mobile apps, and working on AI projects.";
+        conversationContext[userId].lastTopic = "experience";
+      },
+    },
+    // Skills
+    {
+      match: [
+        "skills",
+        "technologies",
+        "tech stack",
+        "what skills do you have",
+        "tell me your skills",
+        "what can you build",
+      ],
+      action: () => {
+        response.type = "list";
+        response.content = {
+          message: "Here are my key skills:",
+          items: [
+            "JavaScript",
+            "React",
+            "Node.js",
+            "Express",
+            "MongoDB",
+            "Python",
+            "Networking",
+            "AI & ML Basics",
+          ],
+        };
+        conversationContext[userId].lastTopic = "skills";
+      },
+    },
+    // Location
+    {
+      match: [
+        "location",
+        "where are you",
+        "where are you based",
+        "where do you live",
+      ],
+      action: () => {
+        response.content =
+          "I'm based in Ethiopia but work globally through remote opportunities.";
+        conversationContext[userId].lastTopic = "location";
+      },
+    },
+    // Contact
+    {
+      match: [
+        "contact",
+        "connect",
+        "reach you",
+        "how can i contact you",
+        "how to reach you",
+      ],
+      action: () => {
+        response.type = "contact";
+        response.content = {
+          message: "You can reach me via:",
+          email: "gezahegn@example.com",
+          linkedin: "https://linkedin.com/in/gezahegn",
+          github: "https://github.com/gezahegn",
+        };
+        conversationContext[userId].lastTopic = "contact";
+      },
+    },
+    // Availability
+    {
+      match: [
+        "available",
+        "availability",
+        "hire you",
+        "are you available",
+        "can i hire you",
+      ],
+      action: () => {
+        response.content =
+          "I'm available for freelance and remote full-time work. Feel free to connect!";
+        conversationContext[userId].lastTopic = "availability";
+      },
+    },
+    // Languages
+    {
+      match: [
+        "languages",
+        "what languages do you speak",
+        "which languages",
+        "languages you know",
+      ],
+      action: () => {
+        response.type = "list";
+        response.content = {
+          message: "I communicate in:",
+          items: ["English", "Amharic", "Afaan Oromo"],
+        };
+        conversationContext[userId].lastTopic = "languages";
+      },
+    },
+    // AI/ML
+    {
+      match: [
+        "ai",
+        "artificial intelligence",
+        "machine learning",
+        "ml",
+        "do you know ai",
+      ],
+      action: () => {
+        response.content =
+          "Yes, I have solid experience with AI and Machine Learning, including AI-focused projects.";
+        conversationContext[userId].lastTopic = "ai";
+      },
+    },
+    // Certifications
+    {
+      match: [
+        "certifications",
+        "certificate",
+        "what certifications do you have",
+      ],
+      action: () => {
+        response.type = "list";
+        response.content = {
+          message: "Here are my certifications:",
+          items: [
+            "Cisco Cybersecurity Essentials",
+            "AI Fundamentals - IBM",
+            "Networking Basics - Cisco",
+          ],
+        };
+        conversationContext[userId].lastTopic = "certifications";
+      },
+    },
+    // Education
+    {
+      match: [
+        "education",
+        "degree",
+        "what did you study",
+        "where did you study",
+      ],
+      action: () => {
+        response.type = "list";
+        response.content = {
+          message: "My educational background:",
+          items: [
+            "BSc in Software Engineering - Jimma University",
+            "AI & Cybersecurity Training - Online",
+          ],
+        };
+        conversationContext[userId].lastTopic = "education";
+      },
+    },
+    // CV
+    {
+      match: ["cv", "resume", "download your cv", "can i see your cv"],
+      action: () => {
+        response.type = "link";
+        response.content = {
+          message: "Download my CV:",
+          url: "https://yourportfolio.com/cv.pdf",
+          text: "Gezagn's CV",
+        };
+        conversationContext[userId].lastTopic = "cv";
+      },
+    },
+    // Help
+    {
+      match: ["help", "what can you do", "services", "how can you help me"],
+      action: () => {
+        response.type = "list";
+        response.content = {
+          message: translations[lang].tips,
+          items: [
+            "View my projects",
+            "Learn about my skills",
+            "Download my CV",
+            "Contact me",
+            "See my certifications",
+            "Check my education",
+            "Read my blog",
+            "View testimonials",
+          ],
+        };
+        conversationContext[userId].lastTopic = "help";
+      },
+    },
+  ];
+
+  for (const keyword of keywords) {
+    if (keyword.match.some(k => lowerMsg.includes(k))) {
+      keyword.action();
+      break;
+    }
   }
-  // Follow-up
-  else if (conversationContext[userId].lastTopic && lowerMsg.includes("more")) {
+
+  // Follow-up (More)
+  if (conversationContext[userId].lastTopic && lowerMsg.includes("more")) {
     if (conversationContext[userId].lastTopic === "projects") {
       response.content =
-        "Want details on a specific project like 'Emergency Booking System' or 'Portfolio Website'?";
+        "Want details on projects like 'Emergency Booking System' or 'Portfolio Website'? Just ask!";
     } else if (conversationContext[userId].lastTopic === "skills") {
       response.content =
-        "Interested in a specific skill? Ask about 'React' or 'Node.js' for more details!";
-    } else if (conversationContext[userId].lastTopic === "greeting") {
-      response.content = translations[lang].tips;
+        "Interested in specific skills? Ask about 'React', 'Node.js', or 'AI'!";
     }
   }
 
