@@ -5,7 +5,8 @@ require("dotenv").config({ path: __dirname + "/.env" });
 const oauth2Client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  "http://localhost:5001/auth/callback"
+  // "http://localhost:5001/auth/callback"
+  "https://gportfolio-backend.onrender.com/auth/callback"
 );
 
 // Set credentials if refresh token is available
