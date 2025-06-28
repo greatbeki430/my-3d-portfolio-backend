@@ -18,10 +18,10 @@ const translations = {
   },
   om: {
     default:
-      "Dhiifama, kana gochuu hin baranne. Projektoota, dandeettii, seenaa, CV, ykn kan biroo gaafachuu dandeessa!",
+      "Dhiifama, kana gochuuf hin leenjine. Projektoota, dandeettii ani qabu, seenaakoo, CV, Resume ykn kan biroo gaafachuu dandeessu!",
     greeting:
-      "Akkam! Ani gargaaraa Gezagn ti. Projektoota koo, dandeettii koo, muuxannoo koo, ykn akkamitti na qunnamuu dandeessu gaafadhu!",
-    tips: "Si gargaaruu danda’a: Projektoota, Dandeettii, Qunnamtii, CV, Ragaa, Barnoota, Blog, Ragaa namaa, Hiibboo, fi kkf!",
+      "Akkam! Ani gargaaraa Gezagn dha. Projektoota koo, dandeettii koo, muuxannoo koo, ykn akkamitti na qunnamuu akka dandeessan gaafachuu ni dandeessu!",
+    tips: "Kanan ani sin gargaaruu danda’u: Projektoota, Dandeettii, Qunnamtii, CV, Resume, Ragaa, Barnoota, Blog, Ragaa namaa, Hawwiikoo fi kkf!",
   },
 };
 
@@ -58,7 +58,9 @@ router.post("/chat", (req, res) => {
         "ሄይ",
         // Afan Oromo
         "akkam",
-        "salam",
+        "Nagaadhaa",
+        "Akkam jirta",
+        "Waa'ee kee"
       ],
       action: () => {
         response.content = translations[selectedLang].greeting;
@@ -72,6 +74,7 @@ router.post("/chat", (req, res) => {
         "about you",
         "who are you",
         "yourself",
+        "about yourself",
         "tell me about you",
         "who is gezagn",
         // Amharic
@@ -81,10 +84,11 @@ router.post("/chat", (req, res) => {
         "ስለ አንተ ንገረኝ",
         "ግዛኝ ማነዊ",
         // Afan Oromo
-        "si baayyee",
+        "waa'ee kee",
         "eenyu",
-        "si jalaa",
-        "siif jedhi",
+        "ati eenyudha",
+        "eenyummaakee",
+        "Waa'ee kee natti himi",
         "gezagn eenyu",
       ],
       action: () => {
@@ -92,8 +96,8 @@ router.post("/chat", (req, res) => {
           selectedLang === "am"
             ? "እኔ ግዛኝ በቀለ ነኝ፣ በድር ልማት፣ ኤአይ፣ እና ሳይበር ደህንነት ልዩ እውቀት ያለኝ ሶፍትዌር መሐንዲስ።"
             : selectedLang === "om"
-            ? "Ani Gezagn Bekele, injinara softiweerii Web Development, AI, fi Cybersecurity keessatti beekumsa qabu."
-            : "I'm Gezagn Bekele, a Software Engineer with expertise in Web Development, AI, and Cybersecurity.";
+            ? "Ani Gezagn Bekele'n jedhama, Software Engineeriidha. Web Development, AI(Aartifishaal Intelegensii), Networking fi Cybersecurity irratti hojjechuu nan danda'a."
+            : "I'm Gezagn Bekele, a passionate Software Engineer with expertise in Web Development, AI, and Cybersecurity. I specialize in building modern, responsive web applications, exploring artificial intelligence solutions, and improving security for digital platforms. I'm also dedicated to continuous learning, open-source contributions, and helping businesses bring their ideas to life through technology.";
         conversationContext[userId].lastTopic = "about";
       },
     },
@@ -112,6 +116,7 @@ router.post("/chat", (req, res) => {
         "ልምድህን ንገረኝ",
         // Afan Oromo
         "muuxannoo",
+        "muuxannoo kee ",
         "seenaa hojii",
         "muuxannoo maali qabda",
         "muuxannoo kee natti himi",
@@ -121,7 +126,7 @@ router.post("/chat", (req, res) => {
           selectedLang === "am"
             ? "የተሟላ የድር መተግበሪያዎች፣ የሞባይል መተግበሪያዎች እና በኤአይ ፕሮጀክቶች ላይ የተግባር ልምድ አለኝ።"
             : selectedLang === "om"
-            ? "Appii full-stack, appii mobaayila, fi projektoota AI irratti muuxannoo hojii qabu."
+            ? "Full-stack website (midiyaa hawaasaa), appii mobaayila, fi projektoota AI irratti muuxannoo hojii nan qaba."
             : "I have hands-on experience building full-stack apps, mobile apps, and working on AI projects.";
         conversationContext[userId].lastTopic = "experience";
       },
@@ -145,11 +150,12 @@ router.post("/chat", (req, res) => {
         "ምን መገንባት ትችላለህ",
         // Afan Oromo
         "dandeettii",
+        "dandeettii kee",
         "teeknooloojii",
         "tech stack",
         "dandeettii maali qabda",
         "dandeettii kee natti himi",
-        "maali ijaara",
+        "maali hojjetta",
       ],
       action: () => {
         response.type = "list";
@@ -158,7 +164,7 @@ router.post("/chat", (req, res) => {
             selectedLang === "am"
               ? "ዋና ችሎታዎቼ እነዚህ ናቸው:"
               : selectedLang === "om"
-              ? "Dandeettii koo kanneen ijoon:"
+              ? "Dandeettiiwwan koo kanneen ijoon:"
               : "Here are my key skills:",
           items: [
             "JavaScript",
@@ -189,16 +195,16 @@ router.post("/chat", (req, res) => {
         "የት ትኖራለህ",
         // Afan Oromo
         "iddoo",
-        "eessatti jirta",
-        "eessatti hundaa’ama",
-        "eessatti jiraatta",
+        "eessa jirta",
+        "eessarraati",
+        "eessa jiraatta",
       ],
       action: () => {
         response.content =
           selectedLang === "am"
             ? "በኢትዮጵያ ተመስርቼ ነው ግን በርቀት እድሎች በዓለም አቀፍ ደረጃ እሰራለሁ።"
             : selectedLang === "om"
-            ? "Itoophiyaa keessatti hundaa’ama garuu carraa teessoo mamaa’ama waliin hojjedha."
+            ? "Bakki ani jiru ykn jiraadhu Itiyoophiyaa keessa yoo ta'u garuu carraa biyya keessa taa'uun fageenyarratti (Remote) hojjechuus nan  danda'a."
             : "I'm based in Ethiopia but work globally through remote opportunities.";
         conversationContext[userId].lastTopic = "location";
       },
@@ -219,9 +225,9 @@ router.post("/chat", (req, res) => {
         "እንዴት መገናኘት እችላለሁ",
         // Afan Oromo
         "qunnamtii",
-        "walqunnamuu",
+        "walqunnamuu ni dandeenyaa",
         "akkamitti si qunnama",
-        "akkamitti si qunnamuu danda’a",
+        "akkamittin si qunnamuu danda’a",
       ],
       action: () => {
         response.type = "contact";
@@ -230,11 +236,13 @@ router.post("/chat", (req, res) => {
             selectedLang === "am"
               ? "በሚከተሉት መገናኘት ይችላሉ:"
               : selectedLang === "om"
-              ? "As keessatti na qunnamuu dandeessa:"
+              ? "Karaalee kanneeniin na qunnamuu ni dandeessu:"
               : "You can reach me via:",
-          email: "gezahegn@example.com",
+          email: "gezbekele@ju2.edu.et",
           linkedin: "https://linkedin.com/in/gezahegn",
           github: "https://github.com/gezahegn",
+          phone:"+251915379958/+251961305788",
+          facebook:""
         };
         conversationContext[userId].lastTopic = "contact";
       },
@@ -534,7 +542,7 @@ router.post("/chat", (req, res) => {
         selectedLang === "am"
           ? "ስለ ፕሮጀክቶች እንደ 'የአደጋ ጊዜ ቦታ ማስያዣ ስርዓት' ወይም 'ፖርትፎሊዮ ድር ጣቢያ' ዝርዝሮችን ይፈልጋሉ? ብቻ ይጠይቁ!"
           : selectedLang === "om"
-          ? "Projektoota akka ‘Emergency Booking System’ ykn ‘Portfolio Website’ irratti odeeffannoo barbaadda? Gaafadhu!"
+          ? "Projektoota akka ‘Emergency Booking System’ ykn ‘Portfolio Website’ irratti odeeffannoo barbaaddan? Gaafachuu ni dandeessu!"
           : "Want details on projects like 'Emergency Booking System' or 'Portfolio Website'? Just ask!";
     } else if (conversationContext[userId].lastTopic === "skills") {
       response.content =

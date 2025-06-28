@@ -89,7 +89,7 @@ router.post("/contact", async (req, res) => {
     console.log("✅ Auto-reply sent to user:", from_email);
 
     // 7. Respond to frontend
-    res.status(200).json({ message: "Message sent and saved successfully!" });
+    res.status(200).json({ message: "Message sent successfully!" });
   } catch (error) {
     console.error("❌ Error in contact submission:", error.message);
     res
